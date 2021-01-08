@@ -8,3 +8,5 @@ endif
 let &undodir = vim_undo_dir
 set undofile
 
+" don't make backups
+set nobackup
