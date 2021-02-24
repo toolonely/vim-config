@@ -19,4 +19,7 @@ Plug 'fcpg/vim-fahrenheit'
 Plug 'Jorengarenar/vim-darkness'
 Plug 'fcpg/vim-orbital'
 
+" todo.txt
+Plug 'freitass/todo.txt-vim'
+
 call plug#end()
