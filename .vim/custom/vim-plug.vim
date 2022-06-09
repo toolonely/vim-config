@@ -89,4 +89,10 @@ endfunction
 
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') } " YouCompleteMe
 
+" ycm
+Plug 'prabirshrestha/vim-lsp' " async lsp support
+Plug 'mattn/vim-lsp-settings' " lsp auto-configs
+Plug 'prabirshrestha/asyncomplete.vim' " async completion
+Plug 'prabirshrestha/asyncomplete-lsp.vim' " lsp source 
+
 call plug#end()
