@@ -36,7 +36,7 @@ Plug 'isene/hyperlist.vim' " hyperlink
 Plug 'ludovicchabant/vim-gutentags' " gutentags
 Plug 'junegunn/limelight.vim' " limelight
 Plug 'drmikehenry/vim-fontsize' " adjust Gvim font size via keypresses 
-" Plug 'majutsushi/tagbar' " tagbar
+Plug 'majutsushi/tagbar' " tagbar
 Plug 'liuchengxu/vista.vim' " vista - modern tagbar replacement
                             " with LSP support
 Plug 'tomtom/tcomment_vim' " tcomment
