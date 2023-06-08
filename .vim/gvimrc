@@ -1,5 +1,2 @@
-set guifont=Iosevka\ Light\ 16
-" no toolbar
-set guioptions -=T
-" no menu bar
-set guioptions -=m
+set guifont=Iosevka\ Light\ 12
+set guioptions= " no GUI elements (menubar, toolbar, scrollbars)

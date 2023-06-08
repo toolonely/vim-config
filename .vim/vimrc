@@ -1,6 +1,211 @@
-" vim-plug first
-execute 'source ~/.vim/custom/vim-plug.vim'
+" minimal vimrc
+" settings are sorted alphabetically
 
-for f in split(glob('~/.vim/custom/*.vim'), '\n')
-  execute 'source' f
-endfor
+nnoremap <F2> :source ~/.vim/vimrc<CR> " reload config without restarting vim
+
+set autoindent " keep indentation when starting a new line
+set autoread " autoupdate files changed externally
+set colorcolumn=80 " visual end of line border at 80 characters
+set expandtab " always insert spaces when tabbing
+" make :grep use ripgrep
+" --smart-case does case insensitive searches for all lowercase patterns
+if executable('rg')
+  set grepprg=rg\ --color=never\ --vimgrep\ --smart-case
+endif
+set hidden " make switching buffers with Ctrl-^ work when current buffer is not saved
+set history=9999 " increase size of history for : commands
+set hlsearch " keep seach highlight for previous search
+set incsearch " incomplete search matches
+set laststatus=2 " always show status line
+set mouse=a " blasphemy, but set mouse
+set nobackup " don't make backups
+set relativenumber " use relative line numbers
+set ruler " show cursor position in status line
+set shiftwidth=0 " same as tabstop
+set showcmd " show command in status line
+set showmode " show mode in status line
+set softtabstop=4 " 4 space tabs in edit mode
+set tabstop=4 " tab is 4 spaces
+" save undo info to custom location
+" /tmp is UNIX/Linux only
+let $TMP = '/tmp'
+let vim_undo_dir = $TMP . '/' . $USER . '-' . 'vim-undo'
+if !isdirectory(vim_undo_dir)
+    call mkdir(vim_undo_dir, 'p', 0700)
+endif
+set undodir=vim_undo_dir
+set undofile
+set wildmenu " improve tab completion menu
+set wildmode=list:longest " tab complete longest common string and show menu
+
+filetype on " enable filetype detection
+filetype indent on " indentation
+filetype plugin on " plugins
+
+syntax on " enable syntax highlight
+
+" mappings
+set pastetoggle=<F3> " pastetoggle
+map <F4> :Marks<CR>
+" map : to ; (saves pressing Shift for any Vim command)
+nnoremap ; :
+let mapleader = '\' " default
+let maplocalleader = '\\'
+
+" for loading other config files
+function Loadcfg(file)
+  execute 'source' a:file
+endfunction
+
+" call Loadcfg('~/.vim/plugins.vim')
+
+" plugins
+
+" install vim-plug if it's not installed
+" only install the plugin manager itself
+" the plugins it manages will be installed manually
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -sfLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
+" make vim load python3 dynamically, so YCM sees it
+if has('python3')
+endif
+
+call plug#begin('~/.vim/plugged')
+
+" project settings
+Plug 'LucHermitte/lh-vim-lib'
+Plug 'LucHermitte/local_vimrc'
+
+" colorschemes
+
+Plug 'croaker/mustang-vim'
+
+" Plug 'arcticicestudio/nord-vim'
+" Plug 'fcpg/vim-fahrenheit'
+" Plug 'barlog-m/oceanic-primal-vim'
+" Plug 'nightsense/cosmic_latte'
+" Plug 'cocopon/iceberg.vim'
+" Plug 'Jorengarenar/vim-darkness'
+" Plug 'fcpg/vim-orbital'
+
+" status line
+Plug 'vim-airline/vim-airline'
+  if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+  endif
+  " unicode symbols
+  let g:airline_left_sep = '»'
+  let g:airline_left_sep = '▶'
+  let g:airline_right_sep = '«'
+  let g:airline_right_sep = '◀'
+  let g:airline_symbols.crypt = '🔒'
+  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.linenr = '␊'
+  let g:airline_symbols.linenr = '␤'
+  let g:airline_symbols.linenr = '¶'
+  let g:airline_symbols.maxlinenr = ''
+  let g:airline_symbols.maxlinenr = '㏑'
+  let g:airline_symbols.branch = '⎇'
+  let g:airline_symbols.paste = 'ρ'
+  let g:airline_symbols.paste = 'Þ'
+  let g:airline_symbols.paste = '∥'
+  let g:airline_symbols.spell = 'Ꞩ'
+  let g:airline_symbols.notexists = 'Ɇ'
+  let g:airline_symbols.whitespace = 'Ξ'
+  " powerline symbols
+  let g:airline_left_sep = ''
+  let g:airline_left_alt_sep = ''
+  let g:airline_right_sep = ''
+  let g:airline_right_alt_sep = ''
+  let g:airline_symbols.branch = ''
+  let g:airline_symbols.readonly = ''
+  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.maxlinenr = ''
+  let g:airline_symbols.dirty='⚡'
+
+" window management
+Plug 'vim-scripts/ZoomWin' " zoom a window in and out
+Plug 'roman/golden-ratio' " auto-resize windows to golden ratio
+
+" marks/bookmarks
+Plug 'kshenoy/vim-signature' " marks manager
+
+" search/replace
+Plug 'junegunn/fzf.vim' " fzf.vim
+  " remap Ctrl-p to show files with fzf (bye Ctrl-P plugin)
+  map <c-p> :Files<cr>
+Plug 'mhinz/vim-grepper' " asynchronous search
+Plug 'markonm/traces.vim' " range, pattern and substitute preview
+
+" folding
+Plug 'Konfekt/FastFold'
+Plug 'tmhedberg/SimpylFold' " better folding for Python
+
+" non-linear structured data
+Plug 'vim-voom/VOoM' " vim outliner
+Plug 'vimwiki/vimwiki', { 'branch' : 'dev' } " vimwiki
+Plug 'isene/hyperlist.vim' " hyperlink
+
+" time management
+Plug 'freitass/todo.txt-vim' " todo.txt
+Plug 'blindFS/vim-taskwarrior' " taskwarrior
+Plug 'framallo/taskwarrior.vim' " taskwarrior syntax files
+
+" programming
+Plug 'sheerun/vim-polyglot' " language pack
+Plug 'jaxbot/semantic-highlight.vim' " semantic highlight
+  nnoremap <F9> :SemanticHighlightToggle<CR>
+Plug 'tomtom/tcomment_vim' " tcomment
+"" tag management
+Plug 'ludovicchabant/vim-gutentags' " gutentags
+  let g:gutentags_cache_dir='/tmp/gutentags'
+Plug 'majutsushi/tagbar' " tagbar
+Plug 'liuchengxu/vista.vim' " vista - modern tagbar replacement
+                            " with LSP support
+"" vcs
+Plug 'mhinz/vim-signify' " markers for versioned files
+  let g:signify_vcs_list = ['git', 'fossil']
+  let g:signify_realtime = 1
+Plug 'tpope/vim-fugitive' " git wrapper
+"" linting
+Plug 'w0rp/ale'
+  let g:ale_cursor_detail=1
+  let g:ale_detail_to_floating_preview=1 " alternative to previous
+  let g:ale_python_auto_virtualenv=1
+  " inside a venv this is not needed
+  " for a non-venv Slackware64-15.0 which has both Python 2
+  " (python defaults to it) and Python 3, this is needed
+  let which_python=system("which python")
+  if which_python == "/usr/bin/python\n"
+    let g:ale_python_pylint_executable='pylint3'
+  endif
+  " make pylint recognize modules in the same directory
+  let g:ale_python_pylint_options = "--init-hook='import sys; sys.path.append(\".\")'"
+  nmap <Leader>n :ALENext<CR>
+  nmap <Leader>p :ALEPrevious<CR>
+"" code completion
+"""lsp
+Plug 'prabirshrestha/vim-lsp' " async lsp support
+Plug 'mattn/vim-lsp-settings' " lsp auto-configs
+Plug 'prabirshrestha/asyncomplete.vim' " async completion
+Plug 'prabirshrestha/asyncomplete-lsp.vim' " lsp source
+""""ycm (alternative to lsp)
+"   function! BuildYCM(info)
+"     " info is a dictionary with 3 fields
+"     " - name:   name of the plugin
+"     " - status: 'installed', 'updated', or 'unchanged'
+"     " - force:  set on PlugInstall! or PlugUpdate!
+"     if a:info.status == 'installed' || a:info.force
+"       !./install.py --force-sudo
+"     endif
+"   endfunction
+" Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') } " YouCompleteMe
+"   let g:ycm_autoclose_preview_window_after_completion=1
+
+
+call plug#end()
+
+silent! colorscheme mustang " set colorscheme or fail silently if it is missing
